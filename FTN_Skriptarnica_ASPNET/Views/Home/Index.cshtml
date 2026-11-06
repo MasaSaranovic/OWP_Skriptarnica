@@ -1,8 +1,81 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Početna";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero-section p-4 p-md-5 mb-5">
+
+    <div class="row align-items-center">
+
+        <div class="col-lg-8">
+
+            <span class="text-success fw-semibold">
+                DOBRO DOŠLI U FTN SKRIPTARNICU
+            </span>
+
+            <h1 class="display-5 fw-bold mt-3">
+                Sve za tvoje studije
+                na jednom mestu.
+            </h1>
+
+            <p class="lead text-muted mt-3">
+                Pronađi knjige, skripte, školski pribor
+                i FTN merch.
+            </p>
+
+            <a asp-controller="Products"
+               asp-action="Index"
+               class="btn btn-success btn-lg mt-3">
+                Pogledaj proizvode
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section>
+
+    <h3 class="mb-4">Šta možeš da pronađeš?</h3>
+
+    <div class="row g-3">
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h5>Knjige i skripte</h5>
+                    <p class="text-muted mb-0">
+                        Literatura za predavanja,
+                        vežbe i pripremu ispita.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h5>Školski pribor</h5>
+                    <p class="text-muted mb-0">
+                        Sveske, olovke i drugi
+                        pribor za studiranje.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h5>FTN merch</h5>
+                    <p class="text-muted mb-0">
+                        Majice, šolje i proizvodi
+                        sa FTN motivima.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>
