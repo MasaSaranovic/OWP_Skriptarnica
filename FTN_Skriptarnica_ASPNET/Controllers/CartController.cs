@@ -1,5 +1,7 @@
-﻿using FTN_Skriptarnica_ASPNET.Models;
+﻿using FTN_Skriptarnica_ASPNET.Data;
+using FTN_Skriptarnica_ASPNET.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text.Json;
 
@@ -7,6 +9,13 @@ namespace FTN_Skriptarnica_ASPNET.Controllers
 {
     public class CartController : Controller
     {
+        private readonly ApplicationDbContext _contex;
+
+        public CartController(ApplicationDbContext contex)
+        {
+            _contex = contex;
+        }
+
         private const string CartKey = "Cart";
 
         //Citanje korpe
@@ -38,9 +47,11 @@ namespace FTN_Skriptarnica_ASPNET.Controllers
         //Dodavanje u korpu
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Add(int productId)
+        public async Task<IActionResult> Add(int productId)
         {
-            var product = ProductsController.GetProducts().FirstOrDefault(p => p.Id == productId);
+            var product = await _contex.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == productId);
 
             if (product == null)
             {
