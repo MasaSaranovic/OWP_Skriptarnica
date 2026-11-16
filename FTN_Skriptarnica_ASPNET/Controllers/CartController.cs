@@ -88,5 +88,85 @@ namespace FTN_Skriptarnica_ASPNET.Controllers
             TempData["Success"] = "Proizvod je dodat u korpu.";
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Remove(int productId)
+        {
+            var cart = GetCart();
+            var item = cart.FirstOrDefault(x => x.ProductId == productId);
+
+            if(item == null)
+            {
+                TempData["Error"] = "Stavka nije pronadjena u korpi";
+                return RedirectToAction(nameof(Index));
+            }
+
+            cart.Remove(item);
+            SaveCart(cart);
+            TempData["Success"] = "Proizvod je uklonjen iz korpe";
+            return RedirectToAction(nameof(Index));
+          
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeQuantity(int productId, int change)
+        {
+            if(change != -1 && change != 1)
+            {
+                return BadRequest();
+            }
+
+            var cart = GetCart();
+            var item = cart.FirstOrDefault(x => x.ProductId == productId);
+
+            if(item == null)
+            {
+                TempData["Error"] = "Stavka nije pronadjena u korpi";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var newQuantity = item.Quantity + change;
+
+            if (newQuantity <= 0) {
+                cart.Remove(item);
+                SaveCart(cart);
+                TempData["Success"] = "Proizvod je uklonjen iz korpe";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var product = await _contex.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id ==  productId);
+
+            if(product == null)
+            {
+                cart.Remove(item);
+                SaveCart(cart);
+                TempData["Error"] = "Proizvod vise nije dostupan i uklonjen je iz korpe";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if(newQuantity > product.StockQuantity)
+            {
+                TempData["Error"] = "Nema dovoljno proizvoda na stanju";
+                return RedirectToAction(nameof(Index));
+            }
+
+            item.Quantity = newQuantity;
+            SaveCart(cart);
+            TempData["Success"] = "Proizvod je uklonjen iz korpe";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Clear()
+        {
+            SaveCart(new List<CartItem>());
+            TempData["Success"] = "Proizvod je uklonjen iz korpe";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
